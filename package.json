@@ -1,0 +1,19 @@
+{
+  "name": "webtorrent-seeder",
+  "version": "1.0.0",
+  "description": "webtorrent-seeder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zackees/webtorrent-seeder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zackees/webtorrent-seeder/issues"
+  },
+  "homepage": "https://github.com/zackees/webtorrent-seeder#readme"
+}
