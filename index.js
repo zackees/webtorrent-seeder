@@ -18,7 +18,7 @@ function doSeed(trackers, files) {
 prompt.start()
 prompt.get(['tracker', 'file'], function (err, result) {
     result.file = result.file || './test.mp4'
-    result.tracker = result.tracker || 'wss://tracker.btorrent.xyz'
+    result.tracker = result.tracker || 'wss://tracker.openwebtorrent.com'
     const FILES = [result.file]
     doSeed([result.tracker], FILES)
 });
