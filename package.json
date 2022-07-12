@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/zackees/webtorrent-seeder/issues"
   },
-  "homepage": "https://github.com/zackees/webtorrent-seeder#readme"
+  "homepage": "https://github.com/zackees/webtorrent-seeder#readme",
+  "dependencies": {
+    "webtorrent": "^1.8.26"
+  },
+  "devDependencies": {
+    "prompt": "^1.3.0"
+  }
 }
