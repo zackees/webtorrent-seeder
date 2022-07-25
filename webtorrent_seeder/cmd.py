@@ -4,6 +4,7 @@ Runs installation and starts seeding.
 
 import argparse
 import os
+import platform
 import sys
 import tempfile
 import urllib.parse
@@ -41,7 +42,15 @@ def install_node_deps(reinstall: bool = False) -> None:
         uninstall()
     if not has_cmd("webtorrent-hybrid"):
         os.system("npm install -g https://github.com/zackees/webtorrent-hybrid")
-    assert has_cmd("webtorrent-hybrid")
+    if not has_cmd("webtorrent-hybrid"):
+        # If sys platform is darwin m1
+        if sys.platform == "darwin":
+            if platform.uname().machine == "arm64":
+                raise OSError(
+                    "Darwin arm64 may not be not supported because of missing webrtc"
+                )
+        else:
+            raise OSError("webtorrent-hybrid failed to install.")
 
 
 def install() -> int:
