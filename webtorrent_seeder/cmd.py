@@ -109,9 +109,13 @@ def main() -> int:
         uninstall()
     install_node_deps()
     if "magnet" in magnet_or_path.lower():
-        seed_magneturi(magnet_uri=magnet_or_path).wait()
+        proc = seed_magneturi(magnet_uri=magnet_or_path)
+        assert proc
+        proc.wait()
     else:
-        seed_file(path=magnet_or_path, tracker_list=trackers).wait()
+        proc = seed_file(path=magnet_or_path, tracker_list=trackers)
+        assert proc
+        proc.wait()
     return 0
 
 

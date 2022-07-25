@@ -4,7 +4,7 @@ Module handles the seeding of a file.
 
 import subprocess
 import threading
-from typing import List
+from typing import List, Optional
 
 
 class SeederProcess:  # pylint: disable=too-few-public-methods
@@ -67,7 +67,7 @@ def seed_file(
         process = subprocess.Popen(  # pylint: disable=consider-using-with
             cmd, shell=True, stdout=subprocess.PIPE, universal_newlines=True
         )
-        magnet_uri: str
+        magnet_uri: Optional[str] = None
         for line in iter(process.stdout.readline, ""):  # type: ignore
             _print(line, end="")
             if line.startswith("magnetURI: "):
@@ -75,7 +75,6 @@ def seed_file(
                 _print("Found magnetURI!")
                 break
         if magnet_uri is None:
-            runner_output.append(None)
             rtn_code = process.poll()
             if rtn_code is not None and rtn_code != 0:
                 _print(f"Process exited with non-zero exit code: {rtn_code}")
@@ -120,7 +119,7 @@ def seed_file(
 
 def seed_magneturi(
     magnet_uri, verbose: bool = False, timeout: int = 5
-) -> SeederProcess:  # Never returns.
+) -> Optional[SeederProcess]:  # Never returns.
     """Runs the command to seed the content."""
     # Runner will be run on a different thread, to allow timeouts.
     def runner(
@@ -184,5 +183,5 @@ def seed_magneturi(
     if thread.is_alive():
         print(f"Timeout reached, terminating seeder process for {magnet_uri}")
         raise OSError(f"Timeout reached, terminating seeder process for {magnet_uri}")
-    seeder_process = runner_output[0]
+    seeder_process = runner_output[0] if len(runner_output) > 0 else None
     return seeder_process
