@@ -29,10 +29,4 @@ RUN pip install --no-cache-dir -e .
 # Expose the port and then launch the app.
 EXPOSE 80
 
-# RUN npm install -g http-server
-
-# CMD ["uvicorn", "--host", "0.0.0.0", "--port", "80", "webtorrent_seeder.app:app"]
-# CMD ["python", "-m", "http.server", "--directory", "www", "--bind", "0.0.0.0", "80"]
 CMD ["/bin/sh", "demo.sh"]
-# install npm http-server
-# CMD ["/bin/sh", "http-server", "-p 80"]
