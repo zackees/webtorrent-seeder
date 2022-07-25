@@ -49,6 +49,7 @@ def seed_file(
 ) -> SeederProcess:
     """Runs the command to seed the content."""
     assert os.path.exists(path), f"File {path} does not exist!"
+
     # Runner will be run on a different thread, to allow timeouts.
     def runner(
         path: str,
