@@ -75,6 +75,7 @@ def seed_file(
                 _print("Found magnetURI!")
                 break
         if magnet_uri is None:
+            runner_output.append(None)
             rtn_code = process.poll()
             if rtn_code is not None and rtn_code != 0:
                 _print(f"Process exited with non-zero exit code: {rtn_code}")
