@@ -1,9 +1,9 @@
 # webtorrent-seeder
 
 
-[![Actions Status](https://github.com/zackees/webtorrent-seederr/workflows/MacOS_Tests/badge.svg)](https://github.com/zackees/webtorrent-seederr/actions/workflows/push_macos.yml)
-[![Actions Status](https://github.com/zackees/webtorrent-seederr/workflows/Win_Tests/badge.svg)](https://github.com/zackees/webtorrent-seederr/actions/workflows/push_win.yml)
-[![Actions Status](https://github.com/zackees/webtorrent-seederr/workflows/Ubuntu_Tests/badge.svg)](https://github.com/zackees/webtorrent-seederr/actions/workflows/push_ubuntu.yml)
+[![Actions Status](https://github.com/zackees/webtorrent-seeder/workflows/MacOS_Tests/badge.svg)](https://github.com/zackees/webtorrent-seeder/actions/workflows/push_macos.yml)
+[![Actions Status](https://github.com/zackees/webtorrent-seeder/workflows/Win_Tests/badge.svg)](https://github.com/zackees/webtorrent-seeder/actions/workflows/push_win.yml)
+[![Actions Status](https://github.com/zackees/webtorrent-seeder/workflows/Ubuntu_Tests/badge.svg)](https://github.com/zackees/webtorrent-seeder/actions/workflows/push_ubuntu.yml)
 
 
 
