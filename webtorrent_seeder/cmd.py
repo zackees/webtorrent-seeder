@@ -32,7 +32,6 @@ def uninstall() -> int:
         " which will auto-install the next time the command runs."
     )
     rtn: int = os.system("npm uninstall -g webtorrent_seeder")
-    rtn += os.system("npm uninstall -g node-gyp-build")
     return rtn
 
 
@@ -40,8 +39,6 @@ def install_node_deps(reinstall: bool = False) -> None:
     """Installs any missing node dependencies for the command to run."""
     if reinstall:
         uninstall()
-    if not has_cmd("node-gyp-build"):
-        os.system("npm install -g node-gyp-build")
     if not has_cmd("webtorrent-hybrid"):
         os.system("npm install -g https://github.com/zackees/webtorrent-hybrid")
     assert has_cmd("webtorrent-hybrid")
@@ -97,8 +94,6 @@ def main() -> int:
         help="Uninstalls the webtorrent_seeder.",
     )
     args = parser.parse_args()  # pylint: disable=unused-variable
-    # parser.add_argument("--install", action="store_true", help="Runs installation.")
-    # Unconditionally run node-gyp-build, since it's so fast to install.
     magnet_or_path = args.magnet_or_path or input(
         "Enter the file path or the magnetURI: "
     )
