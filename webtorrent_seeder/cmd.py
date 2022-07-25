@@ -10,7 +10,7 @@ import tempfile
 import urllib.parse
 from typing import List
 
-from download import download
+from download import download  # type: ignore
 
 from webtorrent_seeder.seeder import seed_file, seed_magneturi
 
@@ -27,7 +27,7 @@ def has_cmd(cmd):
     """
     try:
         subprocess.check_output(f"which {cmd}", shell=True, stderr=subprocess.STDOUT)
-    except Exception:  # pylint: disable=broad-exception
+    except Exception:  # pylint: disable=broad-except
         return False
     return True
 
@@ -55,12 +55,13 @@ def install_node_deps(reinstall: bool = False) -> None:
 
 
 def live_test() -> int:
+    """Does a live test, downloading the resource necessary to seed a file."""
     # Create a temporary directory that will be deleted on close
     with tempfile.TemporaryDirectory() as tmpdirname:
         # Download TEST_DATA_URL
         path = download(TEST_DATA_URL, os.path.join(tmpdirname, "test.mp4"))
         try:
-            process = seed_file(path, trackers=DEFAULT_TRACKERS, verbose=True)
+            process = seed_file(path, tracker_list=DEFAULT_TRACKERS, verbose=True)
             print(f"\nSeeding!\nmagnet_uri:\n{process.magnet_uri}\n")
             encoded = urllib.parse.quote(process.magnet_uri, safe="")
             live_test_url = f"https://webtorrentseeder.com?magnet={encoded}"
@@ -107,7 +108,7 @@ def main() -> int:
     if "magnet" in magnet_or_path.lower():
         seed_magneturi(magnet_uri=magnet_or_path).wait()
     else:
-        seed_file(path=magnet_or_path, trackers=trackers).wait()
+        seed_file(path=magnet_or_path, tracker_list=trackers).wait()
     return 0
 
 

@@ -1,4 +1,7 @@
-import os
+"""
+Module handles the seeding of a file.
+"""
+
 import subprocess
 import threading
 from typing import List
@@ -31,46 +34,55 @@ class SeederProcess:  # pylint: disable=too-few-public-methods
             self.process.wait()
         except KeyboardInterrupt:
             self.terminate()
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             print(f"Exception happened while waiting: {exc}")
             self.terminate()
 
 
 def seed_file(
-    path: str, trackers: List[str], port: int = 80, verbose: bool = False, timeout: int = 15
+    path: str,
+    tracker_list: List[str],
+    port: int = 80,
+    verbose: bool = False,
+    timeout: int = 15,
 ) -> SeederProcess:
     """Runs the command to seed the content."""
     # Runner will be run on a different thread, to allow timeouts.
     def runner(
-        path: str, trackers: List[str], port: int, verbose: bool, runner_output: List[SeederProcess]
+        path: str,
+        tracker_list: List[str],
+        port: int,
+        verbose: bool,
+        runner_output: List[SeederProcess],
     ) -> None:
-        global print
-        __print = print
-        print = __print if verbose else lambda *args, **kwargs: None
-        trackers = ",".join(trackers)
+        def _print(*args, **kwargs):
+            if verbose:
+                print(*args, **kwargs)
+
+        trackers: str = ",".join(tracker_list)
         cmd = f"webtorrent-hybrid seed {path} --keep-seeding --announce {trackers} --port {port}"
         # Iterate through the lines of stdout
         # iterate read line
-        print(f"Running: {cmd}")
+        _print(f"Running: {cmd}")
         process = subprocess.Popen(  # pylint: disable=consider-using-with
             cmd, shell=True, stdout=subprocess.PIPE, universal_newlines=True
         )
         magnet_uri: str
         for line in iter(process.stdout.readline, ""):  # type: ignore
-            print(line, end="")
+            _print(line, end="")
             if line.startswith("magnetURI: "):
                 magnet_uri = line.split(" ")[1].strip()
-                print("Found magnetURI!")
+                _print("Found magnetURI!")
                 break
-        else:
+        if magnet_uri is None:
             rtn_code = process.poll()
             if rtn_code is not None and rtn_code != 0:
-                print(f"Process exited with non-zero exit code: {rtn_code}")
+                _print(f"Process exited with non-zero exit code: {rtn_code}")
                 raise OSError(f"Process exited with non-zero exit code: {rtn_code}")
-            else:
-                print("Could not find magnetURI!")
-                raise OSError(f"Process exited with non-zero exit code: {rtn_code}")
-        # may freeze without draining the stdout buffer
+            _print("Could not find magnetURI!")
+            raise OSError(f"Process exited with non-zero exit code: {rtn_code}")
+
+        # will freeze unless the stdout buffer is drained.
         def drain_stdout(process: subprocess.Popen) -> None:
             try:
                 for _ in iter(process.stdout.readline, ""):  # type: ignore
@@ -93,20 +105,83 @@ def seed_file(
     # Run the runner in a thread
     thread = threading.Thread(
         target=runner,
-        args=(path, trackers, port, verbose, runner_output),
+        args=(path, tracker_list, port, verbose, runner_output),
+        daemon=True,  # so that the main thread can exit normally
     )
     thread.start()
     thread.join(timeout=timeout)
     if thread.is_alive():
         print(f"Timeout reached, terminating seeder process for {path}")
-        thread.kill()
         raise OSError(f"Timeout reached, terminating seeder process for {path}")
     seeder_process = runner_output[0]
     return seeder_process
 
 
 def seed_magneturi(
-    magnet_uri, verbose: bool = False, timeout: int = 15
+    magnet_uri, verbose: bool = False, timeout: int = 5
 ) -> SeederProcess:  # Never returns.
     """Runs the command to seed the content."""
-    raise NotImplementedError("seed_magneturi is not implemented")
+    # Runner will be run on a different thread, to allow timeouts.
+    def runner(
+        magnet_uri: str,
+        verbose: bool,
+        runner_output: List[SeederProcess],
+    ) -> None:
+        def _print(*args, **kwargs):
+            if verbose:
+                print(*args, **kwargs)
+
+        cmd = f"webtorrent-hybrid seed {magnet_uri} --keep-seeding"
+        # Iterate through the lines of stdout
+        # iterate read line
+        _print(f"Running: {cmd}")
+        process = subprocess.Popen(  # pylint: disable=consider-using-with
+            cmd, shell=True, stdout=subprocess.PIPE, universal_newlines=True
+        )
+        started = False
+        for line in iter(process.stdout.readline, ""):  # type: ignore
+            _print(line, end="")
+            if "fetching torrent metadata" in line:
+                started = True
+                break
+        if not started:
+            rtn_code = process.poll()
+            if rtn_code is not None and rtn_code != 0:
+                _print(f"Process exited with non-zero exit code: {rtn_code}")
+                raise OSError(f"Process exited with non-zero exit code: {rtn_code}")
+            _print("Could not find magnetURI!")
+            raise OSError(f"Process exited with non-zero exit code: {rtn_code}")
+
+        # will freeze unless the stdout buffer is drained.
+        def drain_stdout(process: subprocess.Popen) -> None:
+            try:
+                for _ in iter(process.stdout.readline, ""):  # type: ignore
+                    continue  # just drain the stdout buffer
+            except KeyboardInterrupt:
+                return
+
+        thread_stdout_drain = threading.Thread(target=drain_stdout, args=(process,), daemon=True)
+        thread_stdout_drain.start()
+        out = SeederProcess(
+            file_name="?",
+            magnet_uri=magnet_uri,
+            process=process,
+            thread_stdout_drain=thread_stdout_drain,
+        )
+        runner_output.append(out)
+
+    # Setup the thread.
+    runner_output: List[SeederProcess] = []
+    # Run the runner in a thread
+    thread = threading.Thread(
+        target=runner,
+        args=(magnet_uri, verbose, runner_output),
+        daemon=True,  # so that the main thread can exit normally
+    )
+    thread.start()
+    thread.join(timeout=timeout)
+    if thread.is_alive():
+        print(f"Timeout reached, terminating seeder process for {magnet_uri}")
+        raise OSError(f"Timeout reached, terminating seeder process for {magnet_uri}")
+    seeder_process = runner_output[0]
+    return seeder_process
