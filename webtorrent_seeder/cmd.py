@@ -6,10 +6,18 @@ import argparse
 import os
 import subprocess
 import sys
+import tempfile
+import urllib.parse
 from typing import List
+
+from download import download
 
 from webtorrent_seeder.seeder import seed_file, seed_magneturi
 
+# import url encoding
+
+
+TEST_DATA_URL = "https://raw.githubusercontent.com/zackees/webtorrent-seeder/main/test.mp4"
 DEFAULT_TRACKERS = ["wss://webtorrent-tracker.onrender.com"]
 
 
@@ -46,6 +54,23 @@ def install_node_deps(reinstall: bool = False) -> None:
     assert has_cmd("webtorrent-hybrid")
 
 
+def live_test() -> int:
+    # Create a temporary directory that will be deleted on close
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        # Download TEST_DATA_URL
+        path = download(TEST_DATA_URL, os.path.join(tmpdirname, "test.mp4"))
+        try:
+            process = seed_file(path, trackers=DEFAULT_TRACKERS, verbose=True)
+            print(f"\nSeeding!\nmagnet_uri:\n{process.magnet_uri}\n")
+            encoded = urllib.parse.quote(process.magnet_uri, safe="")
+            live_test_url = f"https://webtorrentseeder.com?magnet={encoded}"
+            print(f"\nLive test url:\n{live_test_url}\n")
+            process.wait()
+        finally:
+            os.remove(path)
+    return 0
+
+
 def main() -> int:
     """Runs the installation and starts seeding."""
     parser = argparse.ArgumentParser(
@@ -75,14 +100,14 @@ def main() -> int:
     magnet_or_path = args.magnet_or_path or input("Enter the file path or the magnetURI: ")
     trackers: List[str] = args.trackers
     print(args)
-    print("magnet_or_path: ", magnet_or_path)
+    print("magnet_or_path:", magnet_or_path)
     if args.reinstall:
         uninstall()
     install_node_deps()
-    if "magnet" in magnet_or_path:
-        seed_magneturi(magnet_uri=magnet_or_path)
+    if "magnet" in magnet_or_path.lower():
+        seed_magneturi(magnet_uri=magnet_or_path).wait()
     else:
-        seed_file(path=magnet_or_path, trackers=trackers)
+        seed_file(path=magnet_or_path, trackers=trackers).wait()
     return 0
 
 
