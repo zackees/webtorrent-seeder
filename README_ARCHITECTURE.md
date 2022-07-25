@@ -2,13 +2,18 @@ Videoswarm: Architecture for Decentralized Video
 
 # Centralization vs Decentralization
 
-Centralized internets systems have proven to be censorable by gatekeepers. The aims of this project are to make the internet more decentralized for content. Using portable software that runs in a variaty of places, content can be generated which has built in redundancy. Instead of censoring one server in one location, now the gatekeepers have to censor perhapes 50 servers across the world in different jurisdictions.
+There's two reasons why content producers would be interested in video decentralization
+
+1. Your users distribute your video as they watch it, so the costs of distribution fall to near $0 (for the swarm)
+2. Decentralized video is impossible to censor immediatly, and resistant to censorship over the long term.
+
+Centralized internets systems are vulnerable to censorship. The aims of this project are to make the internet more decentralized for content. Using portable software that runs in a variaty of places, content can be generated which has built in redundancy. Instead of censoring one server in one location, now the gatekeepers have to censor perhapes 50 servers across the world in different jurisdictions.
 
 Decentralization also shifts the burden of distribution video to the users themselves. This make the costs of distributing a video to anyone in the swarm effectively $0.
 
 # How Video Swarm works
 
-There are three components components
+There are three components
 
 1. There is the tracker server
 2. There is the seeding servers
@@ -31,6 +36,8 @@ The website will load javascript code `webtorrent.js` that will perform the nece
 Multiple tracker servers can exist for a piece of content.
 
 The tracking server is packaged up in a docker instance, which can be deployed on Render.com free-tier of services.
+
+For redundancy, multiple trackers should be used which will make the content impossible to censor.
 
 #### Tracker Installation Instructions
 
@@ -89,3 +96,23 @@ Let's install the python command `webtorrent-seeder`
       * if you want to use your own tracker (recommended) then use `webtorrent_seeder myfile.mp4 --trackers wss://mytracker.com`
     * Record the output magnet link
   * Verify the seeding worked by viewing the video at `webtorrentseeder.com` and pasting in the magnet url
+
+# STUN servers
+
+These are required servers that tell clients information necessary for them to connect to the swarm. The costs to run a STUN server is practically nothing so there are lots of STUN servers out there that can be used. There are literally hundreds out there and there are certain lists that exist on github that are updated every 30 mins. The stun servers will be part of the rtcConfig of the webtorrent client, which will contain a STUN server list of one or more urls.
+
+# TURN Servers
+
+We don't use TURN servers because this type of bandwidth turns out to be very expensive. If webtorrent doesn't work on a particular client then this should be handled at the application layer. Falling back to a file hosted on a CDN has known costs at about $0.01 per GB and this is going to be way cheaper than any bandwidth going in and out of a TURN server that you're hosting somewhere.
+
+# Further work
+
+## Bring in all the users
+
+Not everyone can join the swarm right now. That includes all users with "Symetric NATs", which are common with cell phones connections.
+
+Apparently some progress has been made that allows users hole punching under all conditions.
+
+## Allow clients to contribute their bandwidth to the networks
+
+Seeder bots could be used to provide boosted ignition bandwidth at the beginning of a new file. Such bots would monitor a data url which contains a list of magnet urls. When the magnet urls are updated, the seeder bots will detect this and begin preloading the video. When the video link is posted publically, the seeders have already buffered the video enough to provide the burst of bandwidth.
