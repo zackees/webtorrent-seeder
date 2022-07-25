@@ -54,6 +54,11 @@ def install_node_deps(reinstall: bool = False) -> None:
     assert has_cmd("webtorrent-hybrid")
 
 
+def install() -> None:
+    """Uninstall node"""
+    install_node_deps(reinstall=True)
+
+
 def live_test() -> int:
     """Does a live test, downloading the resource necessary to seed a file."""
     # Create a temporary directory that will be deleted on close

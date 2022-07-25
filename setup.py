@@ -96,6 +96,7 @@ setup(
         "console_scripts": [
             "webtorrent_seeder = webtorrent_seeder.cmd:main",
             "webtorrent_seeder_uninstall = webtorrent_seeder.cmd:uninstall",
+            "webtorrent_seeder_install = webtorrent_seeder.cmd:install",
             "webtorrent_seeder_test = webtorrent_seeder.cmd:live_test",
         ],
     },

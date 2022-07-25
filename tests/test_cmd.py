@@ -13,6 +13,10 @@ class CmdTester(unittest.TestCase):
         """Print the help text for the webtorrent_seeder."""
         self.assertEqual(0, os.system("webtorrent_seeder -h"))
 
+    def test_install(self) -> None:
+        """Tests the installation of the node dependencies."""
+        self.assertEqual(0, os.system("webtorrent_seeder_install"))
+
     def test_test_mp4(self) -> None:
         """Seed a test.mp4 file."""
         self.assertTrue(os.path.exists(TEST_MP4))
