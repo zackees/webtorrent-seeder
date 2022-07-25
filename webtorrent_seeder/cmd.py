@@ -92,7 +92,7 @@ def main() -> int:
         "-t",
         "--trackers",
         nargs="*",
-        help="Additional trackers to use.",
+        help=f"Sets the tracker, the default is {DEFAULT_TRACKERS}.",
         default=DEFAULT_TRACKERS,
     )
     # Adds uninstall option
