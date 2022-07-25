@@ -1,6 +1,6 @@
 # Brief
 
-Uses webtorrent to start or join a torrent swarm.
+A command line tool to initiate a webtorrent swarm (seeding) around a file.
 
 # Usage
 
@@ -36,3 +36,7 @@ If the docker instance runs then it will automatically seed the `test.mp4` file 
 # Todo:
 
   * Implement seeding by magneturi
+
+# Versions
+
+  * 1.0.0: Initial commit.
