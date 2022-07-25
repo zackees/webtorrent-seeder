@@ -49,7 +49,7 @@ def install_node_deps(reinstall: bool = False) -> None:
 
 def install() -> int:
     """Uninstall node"""
-    install_node_deps(reinstall=True)
+    install_node_deps(reinstall=False)
     return 0
 
 
