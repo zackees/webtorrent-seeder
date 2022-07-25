@@ -22,9 +22,9 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 # Quick install of app and dependencies.
 COPY . .
 # Install all the dependencies as it's own layer.
-COPY ./requirements.txt requirements.txt
+RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install -e .
+RUN pip install --no-cache-dir -e .
 
 # Expose the port and then launch the app.
 EXPOSE 80
@@ -32,7 +32,7 @@ EXPOSE 80
 # RUN npm install -g http-server
 
 # CMD ["uvicorn", "--host", "0.0.0.0", "--port", "80", "webtorrent_seeder.app:app"]
-CMD ["python", "-m", "http.server", "--directory", "www", "--bind", "0.0.0.0", "80"]
+# CMD ["python", "-m", "http.server", "--directory", "www", "--bind", "0.0.0.0", "80"]
+CMD ["/bin/sh", "demo.sh"]
 # install npm http-server
-
 # CMD ["/bin/sh", "http-server", "-p 80"]
