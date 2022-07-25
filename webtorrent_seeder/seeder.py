@@ -93,7 +93,9 @@ def seed_file(
             except KeyboardInterrupt:
                 return
 
-        thread_stdout_drain = threading.Thread(target=drain_stdout, args=(process,), daemon=True)
+        thread_stdout_drain = threading.Thread(
+            target=drain_stdout, args=(process,), daemon=True
+        )
         thread_stdout_drain.start()
         out = SeederProcess(
             file_name=path,
@@ -163,7 +165,9 @@ def seed_magneturi(
             except KeyboardInterrupt:
                 return
 
-        thread_stdout_drain = threading.Thread(target=drain_stdout, args=(process,), daemon=True)
+        thread_stdout_drain = threading.Thread(
+            target=drain_stdout, args=(process,), daemon=True
+        )
         thread_stdout_drain.start()
         out = SeederProcess(
             file_name="?",

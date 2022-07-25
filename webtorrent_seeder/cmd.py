@@ -4,32 +4,25 @@ Runs installation and starts seeding.
 
 import argparse
 import os
-import subprocess
 import sys
 import tempfile
 import urllib.parse
+from shutil import which
 from typing import List
 
 from download import download  # type: ignore
 
 from webtorrent_seeder.seeder import seed_file, seed_magneturi
 
-# import url encoding
-
-
-TEST_DATA_URL = "https://raw.githubusercontent.com/zackees/webtorrent-seeder/main/test.mp4"
+TEST_DATA_URL = (
+    "https://raw.githubusercontent.com/zackees/webtorrent-seeder/main/test.mp4"
+)
 DEFAULT_TRACKERS = ["wss://webtorrent-tracker.onrender.com"]
 
 
 def has_cmd(cmd):
-    """
-    Checks if a command is available.
-    """
-    try:
-        subprocess.check_output(f"which {cmd}", shell=True, stderr=subprocess.STDOUT)
-    except Exception:  # pylint: disable=broad-except
-        return False
-    return True
+    """Check whether `cmd` is on PATH and marked as executable."""
+    return which(cmd) is not None
 
 
 def uninstall() -> int:
@@ -85,7 +78,9 @@ def main() -> int:
         formatter_class=argparse.RawTextHelpFormatter,
     )
     # First positional argument is the url to the video
-    parser.add_argument("magnet_or_path", help="The magnet_or_path to the content.", nargs="?")
+    parser.add_argument(
+        "magnet_or_path", help="The magnet_or_path to the content.", nargs="?"
+    )
     # Add repeating argument for additional trackers
     parser.add_argument(
         "-t",
@@ -104,7 +99,9 @@ def main() -> int:
     args = parser.parse_args()  # pylint: disable=unused-variable
     # parser.add_argument("--install", action="store_true", help="Runs installation.")
     # Unconditionally run node-gyp-build, since it's so fast to install.
-    magnet_or_path = args.magnet_or_path or input("Enter the file path or the magnetURI: ")
+    magnet_or_path = args.magnet_or_path or input(
+        "Enter the file path or the magnetURI: "
+    )
     magnet_or_path = magnet_or_path.strip()
     if not magnet_or_path:
         raise OSError("Magnet file can't be skipped.")
