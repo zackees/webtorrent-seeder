@@ -54,9 +54,10 @@ def install_node_deps(reinstall: bool = False) -> None:
     assert has_cmd("webtorrent-hybrid")
 
 
-def install() -> None:
+def install() -> int:
     """Uninstall node"""
     install_node_deps(reinstall=True)
+    return 0
 
 
 def live_test() -> int:
