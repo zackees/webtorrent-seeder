@@ -1,3 +1,12 @@
+# webtorrent-seeder
+
+
+[![Actions Status](https://github.com/zackees/webtorrent-seederr/workflows/MacOS_Tests/badge.svg)](https://github.com/zackees/webtorrent-seederr/actions/workflows/push_macos.yml)
+[![Actions Status](https://github.com/zackees/webtorrent-seederr/workflows/Win_Tests/badge.svg)](https://github.com/zackees/webtorrent-seederr/actions/workflows/push_win.yml)
+[![Actions Status](https://github.com/zackees/webtorrent-seederr/workflows/Ubuntu_Tests/badge.svg)](https://github.com/zackees/webtorrent-seederr/actions/workflows/push_ubuntu.yml)
+
+
+
 # Brief
 
 A command line tool to initiate a webtorrent swarm (seeding) around a file. This is essentially a wrapper
