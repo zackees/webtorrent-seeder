@@ -51,4 +51,5 @@ and the the user should inspect that the file peer is working by going to:
 
 # Versions
 
+  * 1.0.1: Disallows empty magnet uri
   * 1.0.0: Initial commit.

@@ -99,6 +99,9 @@ def main() -> int:
     # parser.add_argument("--install", action="store_true", help="Runs installation.")
     # Unconditionally run node-gyp-build, since it's so fast to install.
     magnet_or_path = args.magnet_or_path or input("Enter the file path or the magnetURI: ")
+    magnet_or_path = magnet_or_path.strip()
+    if not magnet_or_path:
+        raise OSError("Magnet file can't be skipped.")
     trackers: List[str] = args.trackers
     print(args)
     print("magnet_or_path:", magnet_or_path)
