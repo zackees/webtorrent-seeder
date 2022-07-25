@@ -2,6 +2,7 @@
 Module handles the seeding of a file.
 """
 
+import os
 import subprocess
 import threading
 from typing import List, Optional
