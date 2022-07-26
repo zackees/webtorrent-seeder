@@ -9,11 +9,12 @@ import sys
 import tempfile
 import urllib.parse
 from shutil import which
-from typing import List
+from typing import List, Union
 
 from download import download  # type: ignore
 
-from webtorrent_seeder.seeder import seed_file, seed_magneturi
+from webtorrent_seeder.peer import PeerProcess, create_peer
+from webtorrent_seeder.seed import SeedProcess, create_file_seeder
 
 TEST_DATA_URL = (
     "https://raw.githubusercontent.com/zackees/webtorrent-seeder/main/test.mp4"
@@ -68,9 +69,10 @@ def live_test() -> int:
         # Download TEST_DATA_URL
         path = download(TEST_DATA_URL, os.path.join(tmpdirname, "test.mp4"))
         try:
-            process = seed_file(path, tracker_list=DEFAULT_TRACKERS, verbose=True)
+            process = create_file_seeder(path, tracker_list=DEFAULT_TRACKERS)
             print(f"\nSeeding!\nmagnet_uri:\n{process.magnet_uri}\n")
-            encoded = urllib.parse.quote(process.magnet_uri, safe="")
+            magnet_uri = process.wait_for_magnet_uri()
+            encoded = urllib.parse.quote(magnet_uri, safe="")
             live_test_url = f"https://webtorrentseeder.com?magnet={encoded}"
             print(f"\nLive test url:\n{live_test_url}\n")
             process.wait()
@@ -117,12 +119,13 @@ def main() -> int:
     if args.reinstall:
         uninstall()
     install_node_deps()
+    proc: Union[PeerProcess, SeedProcess]
     if "magnet" in magnet_or_path.lower():
-        proc = seed_magneturi(magnet_uri=magnet_or_path)
+        proc = create_peer(magnet_uri=magnet_or_path)
         assert proc
         proc.wait()
     else:
-        proc = seed_file(path=magnet_or_path, tracker_list=trackers)
+        proc = create_file_seeder(filepath=magnet_or_path, tracker_list=trackers)
         assert proc
         proc.wait()
     return 0

@@ -27,16 +27,28 @@ Joining a webtorrent swarm:
 
 # Usage (API)
 
+Initiating seeding
+
 ```py
-from webtorrent_seeder.seeder import SeederProcess, seed_file
-seed_process: SeederProcess | None = seed_file(
+from webtorrent_seeder.seed import SeedProcess, create_file_seeder
+seed_process: SeedProcess = create_file_seeder(
     "file.mp4",
     tracker_list=["wss://webtorrent-tracker.onrender.com:80"]
 )
+magnet_uri = seed_process.wait_for_magnet_uri()
+print(f"Found magnet: {magnet_uri}")
 seed_process.wait()  # Blocks until ctrl-c signaled.
 
 ```
 
+Joining a swarm
+```py
+from webtorrent_seeder.peer import PeerProcess, create_peer
+peer_process: PeerProcess = create_peer(
+    magnet_uri=MAGNET_URI
+)
+seed_process.wait()  # Blocks until ctrl-c signaled.
+```
 
 # Testing
 
@@ -72,7 +84,7 @@ and the the user should inspect that the file peer is working by going to:
 
 # Versions
 
-  * 1.0.14: Fix up seeder process and eliminate a thread leak
+  * 1.1.0: Rewrite of the peer/seeding mechanism + more tests.
   * 1.0.13: Port is now part of the tracker url
   * 1.0.11: Lots of fixes exposed by additional testing
   * 1.0.5: Cumalitive bug fixes

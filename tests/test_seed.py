@@ -1,8 +1,7 @@
 import os
 import unittest
-from unittest.mock import DEFAULT
 
-from webtorrent_seeder.seeder import SeederProcess, seed_file, seed_magneturi
+from webtorrent_seeder.seed import SeedProcess, create_file_seeder
 
 HERE = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.dirname(HERE)
@@ -17,8 +16,8 @@ class SeedTester(unittest.TestCase):
 
     def test_test_mp4(self) -> None:
         """Seed a test.mp4 file."""
-        seed_process: SeederProcess = seed_file(
-            path=TEST_MP4,
+        seed_process: SeedProcess = create_file_seeder(
+            filepath=TEST_MP4,
             tracker_list=DEFAULT_TRACKERLIST,
         )
         magnet_uri = seed_process.wait_for_magnet_uri(timeout=15)
