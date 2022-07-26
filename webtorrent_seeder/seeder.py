@@ -43,7 +43,6 @@ class SeederProcess:  # pylint: disable=too-few-public-methods
 def seed_file(
     path: str,
     tracker_list: List[str],
-    port: int = 80,
     verbose: bool = False,
     timeout: int = 15,
 ) -> SeederProcess:
@@ -51,19 +50,24 @@ def seed_file(
     assert os.path.exists(path), f"File {path} does not exist!"
 
     # Runner will be run on a different thread, to allow timeouts.
-    def runner(
+    def runner(  # pylint: disable=too-many-locals
         path: str,
         tracker_list: List[str],
-        port: int,
         verbose: bool,
         runner_output: List[SeederProcess],
     ) -> None:
         def _print(*args, **kwargs):
             if verbose:
                 print(*args, **kwargs)
+        if len(tracker_list) != 1:
+            raise ValueError(f"Only one tracker allowed at this pointm, got {tracker_list} instead")
 
-        trackers: str = ",".join(tracker_list)
-        cmd = f"webtorrent-hybrid seed {path} --keep-seeding --announce {trackers} --port {port}"
+        url_info = tracker_list[0].split(":")
+        tracker_url = url_info[0]
+        port = 80
+        if len(url_info) == 2:
+            port = int(url_info[1])
+        cmd = f"webtorrent-hybrid seed {path} --keep-seeding --announce {tracker_url} --port {port}"
         # Iterate through the lines of stdout
         # iterate read line
         _print(f"Running: {cmd}")
@@ -110,7 +114,7 @@ def seed_file(
     # Run the runner in a thread
     thread = threading.Thread(
         target=runner,
-        args=(path, tracker_list, port, verbose, runner_output),
+        args=(path, tracker_list, verbose, runner_output),
         daemon=True,  # so that the main thread can exit normally
     )
     thread.start()

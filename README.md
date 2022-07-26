@@ -17,7 +17,7 @@ around `webtorrent-hybrid` but with certain fixes applied.
 Starting a webtorrent swarm:
 ```
 > python -m pip install webtorrent_seeder
-> webtorrent_seeder myfile.mp4
+> webtorrent_seeder myfile.mp4 --trackers "wss://webtorrent-tracker.onrender.com:80"
 ```
 
 Joining a webtorrent swarm:
@@ -60,6 +60,7 @@ and the the user should inspect that the file peer is working by going to:
 
 # Versions
 
+  * 1.0.13: Port is now part of the tracker url
   * 1.0.11: Lots of fixes exposed by additional testing
   * 1.0.5: Cumalitive bug fixes
   * 1.0.2: nit

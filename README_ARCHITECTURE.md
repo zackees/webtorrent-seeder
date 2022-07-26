@@ -93,7 +93,7 @@ Let's install the python command `webtorrent-seeder`
   * `pip3 install webtorrent-seeder`
   * Now seed any file:
     * `webtorrent_seeder myfile.mp4` and follow the prompts.
-      * if you want to use your own tracker (recommended) then use `webtorrent_seeder myfile.mp4 --trackers wss://mytracker.com`
+      * if you want to use your own tracker (recommended) then use `webtorrent_seeder myfile.mp4 --trackers wss://mytracker.com:80`
     * Record the output magnet link
   * Verify the seeding worked by viewing the video at `webtorrentseeder.com` and pasting in the magnet url
 
