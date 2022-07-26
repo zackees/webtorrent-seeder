@@ -4,7 +4,7 @@ Videoswarm: Architecture for Decentralized Video
 
 There's two reasons why content producers would be interested in video decentralization
 
-1. Your users distribute your video as they watch it, so the costs of distribution fall to near $0 (for the swarm)
+1. People like free, and decentralization here happens to mean costs of distrubtion fall to zero as your users take on the burden of sharing the video with each other, seemlessly in the background while they watch the video.
 2. Decentralized video is impossible to censor immediatly, and resistant to censorship over the long term.
 
 Centralized internets systems are vulnerable to censorship. The aims of this project are to make the internet more decentralized for content. Using portable software that runs in a variaty of places, content can be generated which has built in redundancy. Instead of censoring one server in one location, now the gatekeepers have to censor perhapes 50 servers across the world in different jurisdictions.

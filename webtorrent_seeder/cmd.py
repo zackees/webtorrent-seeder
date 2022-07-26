@@ -21,7 +21,7 @@ TEST_DATA_URL = (
 DEFAULT_TRACKERS = ["wss://webtorrent-tracker.onrender.com"]
 
 
-def has_cmd(cmd):
+def has_cmd(cmd) -> bool:
     """Check whether `cmd` is on PATH and marked as executable."""
     return which(cmd) is not None
 
@@ -32,7 +32,7 @@ def uninstall() -> int:
         "Uninstalling webtorrent_seeder node dependencies,"
         " which will auto-install the next time the command runs."
     )
-    rtn: int = os.system("npm uninstall -g webtorrent_seeder")
+    rtn: int = os.system("npm uninstall --location=global webtorrent_seeder")
     return rtn
 
 
@@ -41,7 +41,7 @@ def install_node_deps(reinstall: bool = False) -> None:
     if reinstall:
         uninstall()
     if not has_cmd("webtorrent-hybrid"):
-        os.system("npm install -g https://github.com/zackees/webtorrent-hybrid")
+        os.system("npm install --location=global https://github.com/zackees/webtorrent-hybrid")
     if not has_cmd("webtorrent-hybrid"):
         # If sys platform is darwin m1
         if sys.platform == "darwin":
