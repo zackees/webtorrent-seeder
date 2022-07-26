@@ -41,7 +41,9 @@ def install_node_deps(reinstall: bool = False) -> None:
     if reinstall:
         uninstall()
     if not has_cmd("webtorrent-hybrid"):
-        os.system("npm install --location=global https://github.com/zackees/webtorrent-hybrid")
+        os.system(
+            "npm install --location=global https://github.com/zackees/webtorrent-hybrid"
+        )
     if not has_cmd("webtorrent-hybrid"):
         # If sys platform is darwin m1
         if sys.platform == "darwin":

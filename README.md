@@ -72,6 +72,7 @@ and the the user should inspect that the file peer is working by going to:
 
 # Versions
 
+  * 1.0.14: Fix up seeder process and eliminate a thread leak
   * 1.0.13: Port is now part of the tracker url
   * 1.0.11: Lots of fixes exposed by additional testing
   * 1.0.5: Cumalitive bug fixes
