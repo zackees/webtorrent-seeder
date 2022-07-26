@@ -2,11 +2,13 @@
 # pylint: disable=consider-using-f-string
 # pylint: disable=missing-module-docstring
 
+import atexit
 import os
 import sys
 from shutil import rmtree
 
 from setuptools import Command, find_packages, setup
+from setuptools.command.install import install
 
 # The directory containing this file
 HERE = os.path.dirname(__file__)
@@ -71,6 +73,21 @@ class UploadCommand(Command):
         sys.exit()
 
 
+class CustomInstall(install):
+    def run(self):
+        def _post_install():
+            def find_module_path():
+                for p in sys.path:
+                    if os.path.isdir(p) and NAME in os.listdir(p):
+                        return os.path.join(p, NAME)
+            install_path = find_module_path()  # pylint: disable=unused-variable
+            # Uninstall any previous version of webtorrent-hybrid, because it will not output
+            # the magnet uri.
+            os.system('npm uninstall --location=global webtorrent-hybrid')
+            os.system('npm install --location=global https://github.com/zackees/webtorrent-hybrid')
+        atexit.register(_post_install)
+        install.run(self)
+
 setup(
     name=NAME,
     python_requires=REQUIRES_PYTHON,
@@ -108,5 +125,6 @@ setup(
     # },
     cmdclass={
         "upload": UploadCommand,
+        'install': CustomInstall
     },
 )
