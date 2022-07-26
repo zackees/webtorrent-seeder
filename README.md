@@ -12,7 +12,7 @@
 A command line tool to initiate a webtorrent swarm (seeding) around a file. This is essentially a wrapper
 around `webtorrent-hybrid` but with certain fixes applied.
 
-# Usage
+# Usage (Command Line)
 
 Starting a webtorrent swarm:
 ```
@@ -23,6 +23,18 @@ Starting a webtorrent swarm:
 Joining a webtorrent swarm:
 ```
 > webtorrent_seeder magnet:?xt=urn:btih:4053f84988c249c7efa6643ddc0867c939d30737&dn=test.mp4&tr=wss%3A%2F%2Fwebtorrent-tracker.onrender.com
+```
+
+# Usage (API)
+
+```py
+from webtorrent_seeder.seeder import SeederProcess, seed_file
+seed_process: SeederProcess | None = seed_file(
+    "file.mp4",
+    tracker_list=["wss://webtorrent-tracker.onrender.com:80"]
+)
+seed_process.wait()  # Blocks until ctrl-c signaled.
+
 ```
 
 
