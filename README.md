@@ -60,6 +60,7 @@ and the the user should inspect that the file peer is working by going to:
 
 # Versions
 
+  * 1.0.11: Lots of fixes exposed by additional testing
   * 1.0.5: Cumalitive bug fixes
   * 1.0.2: nit
   * 1.0.1: Disallows empty magnet uri
