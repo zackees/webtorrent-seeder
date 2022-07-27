@@ -114,7 +114,6 @@ def main() -> int:
     if not magnet_or_path:
         raise OSError("Magnet file can't be skipped.")
     trackers: List[str] = args.trackers
-    print(args)
     print("magnet_or_path:", magnet_or_path)
     if args.reinstall:
         uninstall()
