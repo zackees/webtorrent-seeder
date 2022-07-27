@@ -85,7 +85,7 @@ and the the user should inspect that the file peer is working by going to:
   * Implement seeding by magneturi
 
 # Versions
-
+  * 1.1.2: Adds torrent port.
   * 1.1.1: Now this package exclusively uses zackees/webtorrent-cli, which has
            been merged with zackees/webtorrent-hybrid
   * 1.1.0: Rewrite of the peer/seeding mechanism + more tests.

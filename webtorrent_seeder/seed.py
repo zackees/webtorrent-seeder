@@ -6,7 +6,7 @@ import os
 import subprocess
 import threading
 import time
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from urllib.parse import urlparse
 
 
@@ -26,7 +26,8 @@ class SeedProcess:  # pylint: disable=too-few-public-methods
     """Seeder process."""
 
     def __init__(
-        self, filepath: str, tracker_list: List[str]
+        self, filepath: str, tracker_list: List[str],
+        torrent_port: Optional[int] = None,
     ) -> None:
         # Use a regex to split out the url and the port, being mindful of the schema
         # and the port.
@@ -38,10 +39,13 @@ class SeedProcess:  # pylint: disable=too-few-public-methods
         self.file_name = filepath
         tracker_url, port = parse_url(tracker_list[0])
         self.magnet_uri = None
-        cmd = (
-            f"webtorrent seed {filepath} --keep-seeding"
-            f" --announce {tracker_url} --port {port}"
-        )
+        cmd_list = [
+            "webtorrent", "seed", filepath, "--keep-seeding",
+            "--announce", tracker_url, "--port", str(port),
+        ]
+        if torrent_port is not None:
+            cmd_list.extend(["--torrent-port", str(torrent_port)])
+        cmd = ' '.join(cmd_list)
         # Iterate through the lines of stdout
         # iterate read line
         self.process = subprocess.Popen(  # pylint: disable=consider-using-with
