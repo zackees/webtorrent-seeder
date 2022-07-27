@@ -39,7 +39,7 @@ class SeedProcess:  # pylint: disable=too-few-public-methods
         tracker_url, port = parse_url(tracker_list[0])
         self.magnet_uri = None
         cmd = (
-            f"webtorrent-hybrid seed {filepath} --keep-seeding"
+            f"webtorrent seed {filepath} --keep-seeding"
             f" --announce {tracker_url} --port {port}"
         )
         # Iterate through the lines of stdout
@@ -88,7 +88,6 @@ class SeedProcess:  # pylint: disable=too-few-public-methods
         return self.magnet_uri
 
     def _stdout_runner(self) -> None:
-        print("starting stdout drain")
         try:
             for line in iter(self.process.stdout.readline, b""):  # type: ignore
                 if not self.alive:

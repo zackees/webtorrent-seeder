@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir -e .
 
-RUN npm install --location=global https://github.com/zackees/webtorrent-hybrid
+RUN npm install --location=global https://github.com/zackees/webtorrent-cli
 
 
 # Expose the port and then launch the app.

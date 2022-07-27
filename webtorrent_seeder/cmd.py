@@ -41,11 +41,11 @@ def install_node_deps(reinstall: bool = False) -> None:
     """Installs any missing node dependencies for the command to run."""
     if reinstall:
         uninstall()
-    if not has_cmd("webtorrent-hybrid"):
+    if not has_cmd("webtorrent"):
         os.system(
-            "npm install --location=global https://github.com/zackees/webtorrent-hybrid"
+            "npm install --location=global https://github.com/zackees/webtorrent-cli"
         )
-    if not has_cmd("webtorrent-hybrid"):
+    if not has_cmd("webtorrent"):
         # If sys platform is darwin m1
         if sys.platform == "darwin":
             if platform.uname().machine == "arm64":
@@ -53,7 +53,7 @@ def install_node_deps(reinstall: bool = False) -> None:
                     "Darwin arm64 may not be not supported because of missing webrtc"
                 )
         else:
-            raise OSError("webtorrent-hybrid failed to install.")
+            raise OSError("webtorrent failed to install.")
 
 
 def install() -> int:

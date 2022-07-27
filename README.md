@@ -10,7 +10,9 @@
 # Brief
 
 A command line tool to initiate a webtorrent swarm (seeding) around a file. This is essentially a wrapper
-around `webtorrent-hybrid` but with certain fixes applied.
+around `webtorrent` but with certain fixes applied, including:
+  * Merged `webtorrent-hybrid` fixes into `webtorrent`
+  * Unconditionally prints out the magnet uri.
 
 # Usage (Command Line)
 
@@ -84,6 +86,8 @@ and the the user should inspect that the file peer is working by going to:
 
 # Versions
 
+  * 1.1.1: Now this package exclusively uses zackees/webtorrent-cli, which has
+           been merged with zackees/webtorrent-hybrid
   * 1.1.0: Rewrite of the peer/seeding mechanism + more tests.
   * 1.0.13: Port is now part of the tracker url
   * 1.0.11: Lots of fixes exposed by additional testing

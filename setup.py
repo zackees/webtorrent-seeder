@@ -36,6 +36,7 @@ with open(os.path.join(HERE, "webtorrent_seeder", "version.py"), encoding="utf-8
 
 assert VERSION
 
+UPLOAD_OCCURED = False
 
 class UploadCommand(Command):
     """Support setup.py upload."""
@@ -54,6 +55,8 @@ class UploadCommand(Command):
         pass
 
     def run(self):
+        global UPLOAD_OCCURED
+        UPLOAD_OCCURED = True
         try:
             self.status("Removing previous builds…")
             rmtree(os.path.join(HERE, "dist"))
@@ -74,17 +77,21 @@ class UploadCommand(Command):
 
 
 class CustomInstall(install):
+    """This is the giant hack to get the installation steps to work."""
     def run(self):
+        if UPLOAD_OCCURED:
+            # Hack to prevent installation during upload.
+            return
         def _post_install():
             def find_module_path():
                 for p in sys.path:
                     if os.path.isdir(p) and NAME in os.listdir(p):
                         return os.path.join(p, NAME)
             install_path = find_module_path()  # pylint: disable=unused-variable
-            # Uninstall any previous version of webtorrent-hybrid, because it will not output
-            # the magnet uri.
-            os.system('npm uninstall --location=global webtorrent-hybrid')
-            os.system('npm install --location=global https://github.com/zackees/webtorrent-hybrid')
+            # Uninstall any previous version of webtorrent cli because those will interfer
+            # with this installation.
+            os.system('npm uninstall --location=global webtorrent-cli')
+            os.system('npm install --location=global https://github.com/zackees/webtorrent-cli')
         atexit.register(_post_install)
         install.run(self)
 

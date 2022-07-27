@@ -12,7 +12,7 @@ class PeerProcess:  # pylint: disable=too-few-public-methods
 
     def __init__(self, magnet_uri: str, output_dir: str | None = None) -> None:
         self.magnet_uri = magnet_uri
-        cmd = f"webtorrent-hybrid seed {magnet_uri} --keep-seeding"
+        cmd = f"webtorrent seed {magnet_uri} --keep-seeding"
         self.process = subprocess.Popen(  # pylint: disable=consider-using-with
             cmd, cwd=output_dir, shell=True, stdout=subprocess.PIPE, universal_newlines=True
         )
